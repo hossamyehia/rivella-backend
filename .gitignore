@@ -1,0 +1,25 @@
+# Node.js dependencies
+node_modules/
+
+# Environment variables
+.env
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Ignore uploads folder
+uploads/
+
+# Optional: Ignore build files if using React or similar
+build/
+dist/
+
+# Optional: Ignore IDE settings
+.vscode/
+.idea/
