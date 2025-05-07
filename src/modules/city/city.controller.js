@@ -14,7 +14,7 @@ export const getAllCities = async (req, res, next) => {
 
 export const addCity = async (req, res, next) => {
   const { name, description } = req.body;
-  if (!name || !description || !req.file) {
+  if (!name || !req.file) {
     return next(new AppError('Name, description and image are required.', 400));
   }
   const imgName = req.file.filename;

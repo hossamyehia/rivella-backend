@@ -19,16 +19,15 @@ export const addCitySchema = Joi.object({
       'string.max': 'Name cannot be more than {#limit} characters long.',
       'any.required': 'Name is required.'
     }),
-  description: Joi.string()
-    .min(5)
+    description: Joi.string()
+    .allow('') // Allow an empty string for description
+    .min(2)
     .max(500)
-    .required()
+    .optional()
     .messages({
       'string.base': 'Description must be a string.',
-      'string.empty': 'Description is required.',
       'string.min': 'Description must be at least {#limit} characters long.',
-      'string.max': 'Description cannot be more than {#limit} characters long.',
-      'any.required': 'Description is required.'
+      'string.max': 'Description cannot be more than {#limit} characters long.'
     })
 });
 
@@ -46,6 +45,7 @@ export const idParamSchema = Joi.object({
 });
 
 // Schema لتحديث مدينة
+// Schema for updating a city
 export const updateCitySchema = Joi.object({
   name: Joi.string()
     .min(2)
@@ -57,7 +57,8 @@ export const updateCitySchema = Joi.object({
       'string.max': 'Name cannot be more than {#limit} characters long.'
     }),
   description: Joi.string()
-    .min(5)
+    .allow('') // Allow an empty string for description
+    .min(2)
     .max(500)
     .optional()
     .messages({
@@ -66,3 +67,4 @@ export const updateCitySchema = Joi.object({
       'string.max': 'Description cannot be more than {#limit} characters long.'
     })
 });
+

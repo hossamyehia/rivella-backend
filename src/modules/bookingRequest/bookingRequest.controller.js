@@ -136,8 +136,9 @@ export const getBookingRequests = async (req, res, next) => {
       priceMin,
       priceMax,
       email
-    } = req.query;
+    } = req.query; 
 
+    
     // 1) If filtering by chalet code/city/village, look up matching chalet IDs
     let chaletIds = [];
     if (chaletCode || city || village) {

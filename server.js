@@ -15,6 +15,7 @@ import UserRouter from "./src/modules/user/user.routes.js";
 import couponRouter from "./src/modules/coupon/coupon.routes.js";
 import { isAdmin } from "./src/utils/middleware/auth.js";
 import ContactRouter from "./src/modules/contact/contact.routes.js";
+import WishlistRouter from "./src/modules/wishlist/wishlist.routes.js";
 
 dotenv.config();
 const app = express();
@@ -40,6 +41,7 @@ app.use(`/${baseUrl}/booking`,bookingRequestRouter)
 app.use(`/${baseUrl}/reservation`,isAdmin,reservationRouter)
 app.use(`/${baseUrl}/coupon`,couponRouter)
 app.use(`/${baseUrl}/contact`,ContactRouter)
+app.use(`/${baseUrl}/wishlist`,WishlistRouter)
 
 
 

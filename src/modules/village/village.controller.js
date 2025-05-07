@@ -14,7 +14,7 @@ export const getAllVillages = async (req, res, next) => {
 export const addVillage = async (req, res, next) => {
   const { name, description, city } = req.body;
   if (!name  || !city || !req.file) {
-    return next(new AppError('Name, description, city ID and image are required.', 400));
+    return next(new AppError('Name, city ID and image are required.', 400));
   }
   const cityExists = await cityModel.findById(city);
   if (!cityExists) {

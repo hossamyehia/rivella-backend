@@ -2,6 +2,7 @@
 import express from 'express';
 import { catchAsyncError } from '../../utils/middleware/catchAsyncError.js';
 import { isAdmin } from '../../utils/middleware/auth.js';
+
 import {
   createCoupon,
   getAllCoupons,
@@ -10,10 +11,15 @@ import {
   deleteCoupon,
   applyCoupon
 } from './coupon.controllers.js';
-import { applyCouponSchema, createCouponSchema, idParamSchema, updateCouponSchema } from './coupon.valdation.js';
+
+import {
+  createCouponSchema,
+  applyCouponSchema,
+  couponIdSchema,
+  updateCouponSchema
+} from './coupon.valdation.js';
 import { valdation } from '../../utils/middleware/valdation.js';
-
-
+valdation
 const couponRouter = express.Router();
 
 // تطبيق كوبون (خلال حجز)
@@ -42,7 +48,7 @@ couponRouter.get(
 couponRouter.get(
   '/:id',
   isAdmin,
-  valdation(idParamSchema),
+  valdation(couponIdSchema),
   catchAsyncError(getCouponById)
 );
 
@@ -50,7 +56,7 @@ couponRouter.get(
 couponRouter.put(
   '/:id',
   isAdmin,
-  valdation(idParamSchema),
+  valdation(couponIdSchema),
   valdation(updateCouponSchema),
   catchAsyncError(updateCoupon)
 );
@@ -59,7 +65,7 @@ couponRouter.put(
 couponRouter.delete(
   '/:id',
   isAdmin,
-  valdation(idParamSchema),
+  valdation(couponIdSchema),
   catchAsyncError(deleteCoupon)
 );
 
