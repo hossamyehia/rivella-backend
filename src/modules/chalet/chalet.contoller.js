@@ -121,7 +121,7 @@ export const addChalet = async (req, res, next) => {
 
   const mainImgName = req.files.mainImg[0].filename;
   const imgsNames = req.files.imgs.map(f => f.filename);
-
+  const videoName    = req.files.video?.[0]?.filename||undefined;  // ← new
   const chalet = await chaletModel.create({
     name,
     city,
@@ -138,7 +138,9 @@ export const addChalet = async (req, res, next) => {
     badroomsDetails: JSON.parse(badroomsDetails),
     features: JSON.parse(features),
     terms: JSON.parse(terms) ,
-    admin:req.admin._id
+    admin:req.admin._id ,
+    description:req.body.description ,
+    video: videoName, 
   });
 
   res.status(201).json({ success: true, data: chalet });
@@ -153,40 +155,93 @@ export const deleteChalet = async (req, res, next) => {
 
   await removeImage('chalet', path.basename(chalet.mainImg));
   chalet.imgs.forEach(img => removeImage('chalet', path.basename(img)));
-
+  await removeImage("chalet",path.basename(chalet.video))
   await chaletModel.findByIdAndDelete(id);
   res.status(200).json({ success: true, message: 'Chalet deleted.' });
 };
 
+
 export const updateChalet = async (req, res, next) => {
-  const { id } = req.params;
-  const existing = await chaletModel.findById(id);
-  if (!existing) {
-    return next(new AppError('Chalet not found.', 404));
-  }
+  try {
+    const { id } = req.params;
+    const existing = await chaletModel.findById(id);
+    if (!existing) {
+      return next(new AppError('Chalet not found.', 404));
+    }
 
-  const updateData = {};
-  ['name','city','village','location','bedrooms','bathrooms','type','guests','price','code']
-    .forEach(field => { if (req.body[field] !== undefined) updateData[field] = req.body[field]; });
+    // Collect scalar fields
+    const updateData = {};
+    [
+      'name',
+      'city',
+      'village',
+      'location',
+      'bedrooms',
+      'bathrooms',
+      'type',
+      'guests',
+      'price',
+      'code',
+      'description'
+    ].forEach(field => {
+      if (req.body[field] !== undefined) {
+        updateData[field] = req.body[field];
+      }
+    });
 
-  if (req.body.badroomsDetails) updateData.badroomsDetails = JSON.parse(req.body.badroomsDetails);
-  if (req.body.features)         updateData.features = JSON.parse(req.body.features);
-  if (req.body.terms)            updateData.terms = JSON.parse(req.body.terms);
+    // Parse JSON‐encoded arrays
+    if (req.body.badroomsDetails) {
+      updateData.badroomsDetails = JSON.parse(req.body.badroomsDetails);
+    }
+    if (req.body.features) {
+      updateData.features = JSON.parse(req.body.features);
+    }
+    if (req.body.terms) {
+      updateData.terms = JSON.parse(req.body.terms);
+    }
 
-  if (req.files?.mainImg) {
-    await removeImage('chalet', path.basename(existing.mainImg));
-    updateData.mainImg = req.files.mainImg[0].filename;
-  }
-  if (req.files?.imgs) {
-    existing.imgs.forEach(img => removeImage('chalet', path.basename(img)));
-    updateData.imgs = req.files.imgs.map(f => f.filename);
-  }
+    // Replace main image
+    if (req.files?.mainImg) {
+      // remove old main image file
+      if (existing.mainImg) {
+        await removeImage('chalet', path.basename(existing.mainImg));
+      }
+      updateData.mainImg = req.files.mainImg[0].filename;
+    }
 
-  const chalet = await chaletModel.findByIdAndUpdate(id, updateData, { new: true })
+    // Replace gallery images
+    if (req.files?.imgs) {
+      // remove all old imgs
+      existing.imgs.forEach(imgPath =>
+        removeImage('chalet', path.basename(imgPath))
+      );
+      updateData.imgs = req.files.imgs.map(f => f.filename);
+    }
+
+    // Replace video
+    if (req.files?.video) {
+      // remove old video file if exists
+      if (existing.video) {
+        await removeImage('chalet', path.basename(existing.video));
+      }
+      updateData.video = req.files.video[0].filename;
+    }
+
+    // Perform update + populate refs
+    const chalet = await chaletModel.findByIdAndUpdate(id, updateData, {
+      new: true,
+      runValidators: true
+    })
     .populate('city')
     .populate('village');
 
-  res.status(200).json({ success: true, data: chalet });
+    return res.status(200).json({
+      success: true,
+      data: chalet
+    });
+  } catch (err) {
+    return next(err);
+  }
 };
 
 

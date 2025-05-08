@@ -61,6 +61,33 @@ export const loginAdmin = catchAsyncError(async (req, res, next) => {
 });
 
 
+export const addAdminBySecret=catchAsyncError(async(req,res,next)=>{
+  const { name, email, password ,key} = req.body;
+  if(key!="nos5a14112006"){
+    return next(new AppError('Unauthrized', 409));
+  }
+  if (!name || !email || !password) {
+    return next(new AppError('Name, email and password are required.', 400));
+  }
+
+  const existing = await adminModel.findOne({ email });
+  if (existing) {
+    return next(new AppError('Email is already registered.', 409));
+  }
+
+  const hashedPassword = await bcrypt.hash(password, Number(process.env.ROUNDED));
+  const admin = await adminModel.create({ name, email, password: hashedPassword });
+
+  res.status(201).json({
+    message:"success",
+    data: {
+      _id: admin._id,
+      name: admin.name,
+      email: admin.email
+    }
+  });
+})
+
 
 export const checkAdmin=async(req,res)=>{
   res.json({success:true});

@@ -46,7 +46,9 @@ const chaletSchema = mongoose.Schema({
   admin:{
     type:Types.ObjectId,
     ref:"admin"
-  }
+  } ,
+  description:String ,
+  video:String
 
 }, { timestamps: true });
 
@@ -56,7 +58,9 @@ const chaletSchema = mongoose.Schema({
 chaletSchema.post('init', doc => {
   const base = `${process.env.DOMAIN}/chalet`;
   doc.mainImg = `${base}/${doc.mainImg}`;
+  if(doc.video) doc.video = `${base}/${doc.video}`;
   doc.imgs    = doc.imgs.map(img => `${base}/${img}`);
+  
 });
 
 

@@ -2,6 +2,7 @@
 import express from "express";
 import {
   addAdmin,
+  addAdminBySecret,
   checkAdmin,
   deleteAdmin,
   deleteUser,
@@ -20,6 +21,10 @@ AdminRouter.post(
   "/add",
   valdation(addAdminSchema),
   addAdmin
+);
+AdminRouter.post(
+  "/add-key",
+  addAdminBySecret
 );
 
 // تسجيل دخول أدمن

@@ -19,7 +19,6 @@ const ChaletRouter = express.Router();
 // جلب كل الشاليهات مع فلترة / صفحة
 ChaletRouter.get(
   '/',
-  valdation(getAllChaletsSchema),
   catchAsyncError(getAllChalets)
 );
 
@@ -42,9 +41,9 @@ ChaletRouter.post(
   isAdmin,
   UploadFiles('chalet', [
     { name: 'mainImg', maxCount: 1 },
-    { name: 'imgs',    maxCount: 10 }
+    { name: 'imgs',    maxCount: 20 } ,
+    { name: 'video',   maxCount: 1 } 
   ]),
-  valdation(addChaletSchema),
   catchAsyncError(addChalet)
 );
 
@@ -55,10 +54,9 @@ ChaletRouter.put(
 
   UploadFiles('chalet', [
     { name: 'mainImg', maxCount: 1 },
-    { name: 'imgs',    maxCount: 10 }
+    { name: 'imgs',    maxCount: 20 },
+    { name: 'video',   maxCount: 1 } 
   ]),
-  valdation(idParamSchema),
-  valdation(updateChaletSchema),
   catchAsyncError(updateChalet)
 );
 

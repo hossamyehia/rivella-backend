@@ -1,7 +1,7 @@
 
 // تولّد قالب البريد الإلكتروني لطلب حجز شاليه للمدير (بالعربي)، مع تفاصيل الكوبون
 export function bookingConfirmationEmailTemplate(request) {
-  const viewLink = `${process.env.HOSTFRONT}/bookingRequests/${request._id}`;
+  const viewLink = `${process.env.HOSTFRONT}/admin?section=bookings`;
   return `<!DOCTYPE html>
 <html lang="ar">
 <head>
