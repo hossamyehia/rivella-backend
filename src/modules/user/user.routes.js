@@ -10,7 +10,10 @@ import {
   resendVerificationCode,
   loginUser,
   getUserProfile,
-  updateUserProfile
+  updateUserProfile,
+  forgetPassword,
+  resetPassword,
+  checkResetToken
 } from './user.controller.js';
 
 import {
@@ -67,4 +70,8 @@ UserRouter.put(
   catchAsyncError(updateUserProfile)
 );
 
+
+UserRouter.post("/forgot-password",forgetPassword);
+UserRouter.get("/check-reset-token",checkResetToken);
+UserRouter.post("/reset-password",resetPassword);
 export default UserRouter;

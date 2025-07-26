@@ -1,12 +1,13 @@
 
-import { bookingRequestModel } from "../../../database/models/bookingRequest.model.js";
-import { chaletModel } from "../../../database/models/chalet.model.js";
-import { couponModel } from "../../../database/models/coupon.js";
+import { bookingRequestModel } from "./bookingRequest.model.js";
+import { chaletModel } from "../chalet/chalet.model.js";
+import { couponModel } from "../coupon/coupon.model.js";
 import { sendBookingConfirmationEmail } from "../../utils/Email/sendEmail.js";
 import { sendBookingRequestEmail } from "../../utils/Email/sendResetEmail.js";
 import mongoose from 'mongoose';
 import AppError from "../../utils/services/AppError.js";
-import { reservationModel } from "../../../database/models/reservation.model.js";
+import { reservationModel } from "../reservation/reservation.model.js";
+import { addAdminSchema } from "../admin/admin.valdation.js";
 
 
 // Create a new booking request with availability and coupon handling
@@ -194,3 +195,9 @@ export const getBookingRequests = async (req, res, next) => {
     next(err);
   }
 };
+
+
+export const clearAll=async(req,res,next)=>{
+  await bookingRequestModel.deleteMany({}) 
+  res.json({message:"success"})
+}

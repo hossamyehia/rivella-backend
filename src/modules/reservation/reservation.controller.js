@@ -1,7 +1,7 @@
-import { bookingRequestModel } from "../../../database/models/bookingRequest.model.js";
-import { chaletModel } from "../../../database/models/chalet.model.js";
-import { couponModel } from "../../../database/models/coupon.js";
-import { reservationModel } from "../../../database/models/reservation.model.js";
+import { bookingRequestModel } from "../bookingRequest/bookingRequest.model.js";
+import { chaletModel } from "../chalet/chalet.model.js";
+import { couponModel } from "../coupon/coupon.model.js";
+import { reservationModel } from "./reservation.model.js";
 import { sendApprovalEmail } from "../../utils/Email/sendApprovalEmail.js";
 import { sendRejectionEmail } from "../../utils/Email/sendRejectionEmail.js";
 import AppError from "../../utils/services/AppError.js";

@@ -1,6 +1,6 @@
 // import AppError from '../services/AppError.js';
-import { wishlistModel } from '../../../database/models/wishlist.model.js';
-import { chaletModel } from '../../../database/models/chalet.model.js';
+import { wishlistModel } from './wishlist.model.js';
+import { chaletModel } from '../chalet/chalet.model.js';
 import AppError from '../../utils/services/AppError.js';
 
 // GET /wishlist

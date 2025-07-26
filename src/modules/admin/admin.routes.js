@@ -10,7 +10,7 @@ import {
   getAllUsers,
   loginAdmin
 } from "./admin.controller.js";
-import { isAdmin } from "../../utils/middleware/auth.js";
+import { isAdmin, isLogin } from "../../utils/middleware/auth.js";
 import { addAdminSchema, idParamSchema, loginAdminSchema } from "./admin.valdation.js";
 import { valdation } from "../../utils/middleware/valdation.js";
 
@@ -37,7 +37,7 @@ AdminRouter.post(
 // التحقق من صلاحية الأدمن
 AdminRouter.get(
   "/is-admin",
-  isAdmin,
+  isLogin,
   checkAdmin
 );
 

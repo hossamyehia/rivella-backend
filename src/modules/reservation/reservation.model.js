@@ -17,6 +17,7 @@ const reservationSchema = new mongoose.Schema({
   discountValue:  { type: Number, required: function() { return !!this.coupon; } },
   discountAmount: { type: Number, required: function() { return !!this.coupon; } },
   priceBeforeDiscount: { type: Number, required: function() { return !!this.coupon; } }
+  // TODO Created AT
 }, { timestamps: true });
 
 export const reservationModel = mongoose.model('reservation', reservationSchema);

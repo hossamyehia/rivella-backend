@@ -2,7 +2,7 @@
 // controllers/contact.controller.js
 
 import mongoose from 'mongoose';
-import { contactModel } from '../../../database/models/contact.model.js';
+import { contactModel } from './contact.model.js';
 // Create a new contact message (usable by public)
 export async function createContact(req, res) {
   try {

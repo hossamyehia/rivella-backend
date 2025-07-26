@@ -29,7 +29,10 @@ const userSchema = new mongoose.Schema({
   },
   verificationCode: {
     type: String
-  }
+  } ,
+  resetToken:String,
+  resetTokenExpiration:Date
+
 }, { timestamps: true });
 
 export const userModel = mongoose.model('user', userSchema);

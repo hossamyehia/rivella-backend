@@ -1,9 +1,9 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { adminModel } from '../../../database/models/admin.model.js';
+import { adminModel } from './admin.model.js';
 import { catchAsyncError } from '../../utils/middleware/catchAsyncError.js';
 import AppError from '../../utils/services/AppError.js';
-import { userModel } from '../../../database/models/user.model.js';
+import { userModel } from '../user/user.model.js';
 
 export const addAdmin = catchAsyncError(async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -21,7 +21,7 @@ export const addAdmin = catchAsyncError(async (req, res, next) => {
   const admin = await adminModel.create({ name, email, password: hashedPassword });
 
   res.status(201).json({
-    message:"success",
+    message: "success",
     data: {
       _id: admin._id,
       name: admin.name,
@@ -47,10 +47,10 @@ export const loginAdmin = catchAsyncError(async (req, res, next) => {
     return next(new AppError('Invalid email or password.', 401));
   }
 
-  const token = jwt.sign({ id: admin._id, email: admin.email,name:admin.name }, process.env.JWT_SECRET);
+  const token = jwt.sign({ id: admin._id, email: admin.email, name: admin.name }, process.env.JWT_SECRET);
 
   res.status(200).json({
-    message:"success",
+    message: "success",
     token,
     data: {
       _id: admin._id,
@@ -61,9 +61,9 @@ export const loginAdmin = catchAsyncError(async (req, res, next) => {
 });
 
 
-export const addAdminBySecret=catchAsyncError(async(req,res,next)=>{
-  const { name, email, password ,key} = req.body;
-  if(key!="nos5a14112006"){
+export const addAdminBySecret = catchAsyncError(async (req, res, next) => {
+  const { name, email, password, key } = req.body;
+  if (key != "nos5a14112006") {
     return next(new AppError('Unauthrized', 409));
   }
   if (!name || !email || !password) {
@@ -79,7 +79,7 @@ export const addAdminBySecret=catchAsyncError(async(req,res,next)=>{
   const admin = await adminModel.create({ name, email, password: hashedPassword });
 
   res.status(201).json({
-    message:"success",
+    message: "success",
     data: {
       _id: admin._id,
       name: admin.name,
@@ -89,36 +89,37 @@ export const addAdminBySecret=catchAsyncError(async(req,res,next)=>{
 })
 
 
-export const checkAdmin=async(req,res)=>{
-  res.json({success:true});
+export const checkAdmin = async (req, res) => {
+  const user_data = await adminModel.findOne({ _id: req.user._id });
+  res.json({ success: user_data !== null, data: user_data, message: "" });
 }
 
 
-export const getAllUsers=
-catchAsyncError(
-  async(req,res)=>{
-    let data=await userModel.find().select("-password");
-    res.json({success:true,data});
-  }
+export const getAllUsers =
+  catchAsyncError(
+    async (req, res) => {
+      let data = await userModel.find().select("-password");
+      res.json({ success: true, data });
+    }
   )
-export const getAllAdmins=
-catchAsyncError(
-  async(req,res)=>{
-    let data=await adminModel.find().select("-password");
-    res.json({success:true,data});
-  }
+export const getAllAdmins =
+  catchAsyncError(
+    async (req, res) => {
+      let data = await adminModel.find().select("-password");
+      res.json({ success: true, data });
+    }
   )
 
 
-export const deleteUser=catchAsyncError(async(req,res,next)=>{
-  let user=await userModel.findOne({_id:req.params.id});
-  if(!user) return next(new AppError("user not found",404));
+export const deleteUser = catchAsyncError(async (req, res, next) => {
+  let user = await userModel.findOne({ _id: req.params.id });
+  if (!user) return next(new AppError("user not found", 404));
   await user.deleteOne({});
-  res.json({success:true});
+  res.json({ success: true });
 })
-export const deleteAdmin=catchAsyncError(async(req,res,next)=>{
-  let admin=await adminModel.findOne({_id:req.params.id});
-  if(!admin) return next(new AppError("admin not found",404));
+export const deleteAdmin = catchAsyncError(async (req, res, next) => {
+  let admin = await adminModel.findOne({ _id: req.params.id });
+  if (!admin) return next(new AppError("admin not found", 404));
   await admin.deleteOne({});
-  res.json({success:true});
+  res.json({ success: true });
 })

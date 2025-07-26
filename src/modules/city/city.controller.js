@@ -1,21 +1,30 @@
 import path from 'path';
-import { cityModel } from '../../../database/models/city.model.js';
+import { cityModel } from './city.model.js';
 import AppError from '../../utils/services/AppError.js';
 import { removeImage } from '../../utils/services/removefile.js';
-import { villageModel } from '../../../database/models/village.model.js';
-import { deleteVillagesAndChaletsByCityId } from '../../utils/handlers/refactor.handerl.js';
-
-
+import { deleteVillagesAndChaletsByCityId } from '../../utils/handlers/refactor.handler.js';
 
 export const getAllCities = async (req, res, next) => {
   const cities = await cityModel.find();
   res.status(200).json({ success: true, data: cities });
 };
 
+export const getById = async (req, res, next) => {
+  const { id } =  req.params;
+  const city = await cityModel.findOne({ _id: id });
+  res.status(200).json({ success: true, data: city });
+}
+
 export const addCity = async (req, res, next) => {
   const { name, description } = req.body;
-  if (!name || !req.file) {
-    return next(new AppError('Name, description and image are required.', 400));
+  if (!name) {
+    return next(new AppError('يجب إدخال الاسم', 400));
+  }
+  if (!description) {
+    return next(new AppError('يجب إدخال الوصف', 400));
+  }
+  if (!req.file) {
+    return next(new AppError('يجب تحميل صورة للمدينة', 400));
   }
   const imgName = req.file.filename;
   const city = await cityModel.create({ name, description, img: imgName });

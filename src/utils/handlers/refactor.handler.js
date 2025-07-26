@@ -1,5 +1,5 @@
-import { villageModel } from "../../../database/models/village.model.js";
-import { chaletModel } from "../../../database/models/chalet.model.js";
+import { villageModel } from "../../modules/village/village.model.js";
+import { chaletModel } from "../../modules/chalet/chalet.model.js";
 import { removeImage } from "../services/removefile.js"
 
 import path from 'path';

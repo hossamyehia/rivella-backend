@@ -1,4 +1,4 @@
-import { couponModel } from '../../../database/models/coupon.js';
+import { couponModel } from './coupon.model.js';
 import AppError from '../../utils/services/AppError.js';
 // Create a new coupon (Admin)
 export const createCoupon = async (req, res, next) => {

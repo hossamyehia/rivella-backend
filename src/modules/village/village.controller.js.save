@@ -1,27 +1,25 @@
 // controllers/village.controller.js
 import path from 'path';
-import { villageModel } from './village.model.js';
-import { cityModel } from '../city/city.model.js';
+import { villageModel } from '../../../database/models/village.model.js';
+import { cityModel } from '../../../database/models/city.model.js';
 import AppError from '../../utils/services/AppError.js';
 import { removeImage } from '../../utils/services/removefile.js';
-import { deleteChaletsByVillageId } from '../../utils/handlers/refactor.handler.js';
-import { normalizeFormData } from '../../utils/_helper/_helper.js';
+import { deleteChaletsByVillageId } from '../../utils/handlers/refactor.handerl.js';
 
 export const getAllVillages = async (req, res, next) => {
-  const villages = await villageModel.find().populate('city features.feature');
+  const villages = await villageModel.find().populate('city');
   res.status(200).json({ success: true, data: villages });
 };
 
 export const getVillage = async (req, res, next) => {
-  const data = await villageModel.findOne({ _id: req.params.id }).populate('city features.feature');
+  const data = await villageModel.findOne({_id:req.params.id}).populate('city');
   res.status(200).json({ success: true, data });
 };
 
 
 export const addVillage = async (req, res, next) => {
-  const { name, city } = req.body;
-  // console.log(req.body);
-  const data = normalizeFormData(req.body, ["features"])
+  const { name, description, city, features } = req.body;
+  console.log(req.body);
 
   if (!name || !city) {
     return next(new AppError('Name and city ID are required.', 400));
@@ -39,11 +37,23 @@ export const addVillage = async (req, res, next) => {
 
   const gallery = req.files?.imgs ? req.files.imgs.map(f => f.filename) : [];
 
+  let featureList = [];
+  if (features) {
+    try {
+      featureList = JSON.parse(features);
+    } catch {
+      return next(new AppError('Invalid features format. Expecting JSON array.', 400));
+    }
+  }
+
   const village = await villageModel.create({
-    ...data,
+    name,
+    description,
+    city,
     img: imgName,
     imgs: gallery,
-  }).populate('city features.feature');
+    features: featureList
+  });
 
   res.status(201).json({ success: true, data: village });
 };
@@ -78,7 +88,7 @@ export const updateVillage = async (req, res, next) => {
   }
 
   const updateData = {};
-  if (name) updateData.name = name;
+  if (name)        updateData.name = name;
   if (description) updateData.description = description;
   if (city) {
     const cityExists = await cityModel.findById(city);
@@ -109,6 +119,6 @@ export const updateVillage = async (req, res, next) => {
     updateData.imgs = req.files.imgs.map(f => f.filename);
   }
 
-  const updated = await villageModel.findByIdAndUpdate(id, updateData, { new: true }).populate('city features.feature');
+  const updated = await villageModel.findByIdAndUpdate(id, updateData, { new: true }).populate('city');
   res.status(200).json({ success: true, data: updated });
 };

@@ -5,6 +5,7 @@ import { isAdmin } from '../../utils/middleware/auth.js';
 import { UploadFile } from '../../utils/middleware/fileUpload.js';
 import {
   getAllCities,
+  getById,
   addCity,
   deleteCity,
   updateCity
@@ -15,37 +16,31 @@ import { valdation } from '../../utils/middleware/valdation.js';
 
 const CityRouter = express.Router();
 
-// جلب كل المدن
-CityRouter.get(
-  '/',
-  catchAsyncError(getAllCities)
-);
+CityRouter
+  .route("/")
+  .get(
+    catchAsyncError(getAllCities)
+  )
+  .post(
+    isAdmin,
+    UploadFile('city', 'img'),
+    catchAsyncError(addCity)
+  );
 
-// إضافة مدينة جديدة
-CityRouter.post(
-  '/',
-  isAdmin,
-  UploadFile('city', 'img'),
-  valdation(addCitySchema),
-  catchAsyncError(addCity)
-);
 
 // حذف مدينة
-CityRouter.delete(
-  '/:id',
-  isAdmin,
-  valdation(idParamSchema),
-  catchAsyncError(deleteCity)
-);
-
-// تحديث مدينة
-CityRouter.put(
-  '/:id',
-  isAdmin,
-  UploadFile('city', 'img'),
-  valdation(idParamSchema),
-  valdation(updateCitySchema),
-  catchAsyncError(updateCity)
-);
+CityRouter
+  .route("/:id")
+  .get(
+    catchAsyncError(getById)
+  )
+  .delete(
+    isAdmin,
+    catchAsyncError(deleteCity)
+  ).put(
+    isAdmin,
+    UploadFile('city', 'img'),
+    catchAsyncError(updateCity)
+  );
 
 export default CityRouter;
