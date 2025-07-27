@@ -43,7 +43,7 @@ export const addVillage = async (req, res, next) => {
     ...data,
     img: imgName,
     imgs: gallery,
-  }).populate('city features.feature');
+  })
 
   res.status(201).json({ success: true, data: village });
 };
