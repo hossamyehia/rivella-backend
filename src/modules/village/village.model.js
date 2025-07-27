@@ -10,9 +10,9 @@ const VillageFeatureSchema = new mongoose.Schema({
 })
 
 const VillageServiceSchema = new mongoose.Schema({
-  feature: {
+  service: {
     type: Types.ObjectId,
-    ref: "feature",
+    ref: "service",
     required: true
   },
   price: { type: Number, default: 0 }
