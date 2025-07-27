@@ -9,6 +9,15 @@ const VillageFeatureSchema = new mongoose.Schema({
   price: { type: Number, default: 0 }
 })
 
+const VillageServiceSchema = new mongoose.Schema({
+  feature: {
+    type: Types.ObjectId,
+    ref: "feature",
+    required: true
+  },
+  price: { type: Number, default: 0 }
+})
+
 const villageSchema = mongoose.Schema({
   name: String,
   img: String,
@@ -19,6 +28,7 @@ const villageSchema = mongoose.Schema({
     require: true
   },
   features: [VillageFeatureSchema],
+  services: [VillageServiceSchema],
   imgs: []
 
 

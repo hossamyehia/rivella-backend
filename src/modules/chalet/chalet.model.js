@@ -10,6 +10,15 @@ const ChaletFeatureSchema = new mongoose.Schema({
   price: { type: Number, default: 0 }
 })
 
+const ChaletServiceSchema = new mongoose.Schema({
+  service: {
+    type: Types.ObjectId,
+    ref: "service",
+    required: true
+  },
+  price: { type: Number, default: 0 }
+})
+
 const chaletSchema = mongoose.Schema({
   name: String,
   city: {
@@ -57,6 +66,7 @@ const chaletSchema = mongoose.Schema({
   features: [
     ChaletFeatureSchema
   ],
+  services: [ChaletServiceSchema],
   terms: [
     {
       type: Types.ObjectId,

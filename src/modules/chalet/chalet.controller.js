@@ -9,7 +9,7 @@ import path from 'path';
 
 export const createChalet = async (req, res, next) => {
     try {
-        const fieldsToParseAsJSON = ['rooms', 'features', 'terms'];
+        const fieldsToParseAsJSON = ['rooms', 'features', 'terms', 'services'];
         let data = normalizeFormData(req.body, fieldsToParseAsJSON, ['code']);
         const { error, value } = chaletCreateSchema.validate(data);
         if (error) return next(new AppError(`Missing required fields. ${error.details[0].message}`, 400));
@@ -39,7 +39,7 @@ export const createChalet = async (req, res, next) => {
 
 export const updateChalet = async (req, res, next) => {
     console.log(req.body)
-    const fieldsToParseAsJSON = ['rooms', 'features', 'terms'];
+    const fieldsToParseAsJSON = ['rooms', 'features', 'terms', 'services'];
     const data = normalizeFormData(req.body, fieldsToParseAsJSON, ['code']);
     const { error } = chaletUpdateSchema.validate(data);
     if (error) {
@@ -66,7 +66,7 @@ export const updateChalet = async (req, res, next) => {
             data.video = req.files?.video?.[0]?.filename;
 
         const updatedChalet = await chaletModel.findByIdAndUpdate(req.params.id, data, { new: true, session })
-            .populate('city village features.feature terms');
+            .populate('city village features.feature services.service terms');
 
         await session.commitTransaction();
         session.endSession();
@@ -88,7 +88,7 @@ export const updateChalet = async (req, res, next) => {
         res.json({ success: true, data: updatedChalet });
 
     } catch (err) {
-        console.log(err);
+        // console.log(err);
         await session.abortTransaction();
         session.endSession();
         next(err);
@@ -115,7 +115,7 @@ export const deleteChalet = async (req, res, next) => {
 export const getChaletById = async (req, res, next) => {
     try {
         const chalet = await chaletModel.findById(req.params.id)
-            .populate('city village features.feature terms');
+            .populate('city village features.feature services.service terms');
         if (!chalet) return res.status(404).json({ error: 'Chalet not found' });
 
         const today = new Date();
@@ -166,7 +166,7 @@ export const getAllChalets = async (req, res, next) => {
 
         if (admin === 'true') {
             const chalets = await chaletModel.find(filter)
-                .populate('city village features.feature terms');
+                .populate('city village features.feature services.service terms');
             return res.status(200).json({
                 success: true,
                 total: chalets.length,
@@ -238,7 +238,7 @@ export const getAllChalets = async (req, res, next) => {
 export const getHomeChalets = async (req, res, next) => {
     try {
         const chalets = await chaletModel.find({ isVisiable: true, isActive: true })
-            .populate('city village features.feature terms');
+            .populate('city village features.feature services.service terms');
         return res.status(200).json({
             success: true,
             data: chalets

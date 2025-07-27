@@ -20,6 +20,7 @@ import WishlistRouter from "./src/modules/wishlist/wishlist.routes.js";
 import featureRouter from "./src/modules/feature/feature.route.js";
 import termsRouter from "./src/modules/terms/terms.route.js";
 import lookupsRouter from "./src/modules/lookups/lookups.route.js";
+import serviceRouter from "./src/modules/service/service.route.js";
 
 dotenv.config();
 const app = express();
@@ -44,7 +45,8 @@ app.use(`/${baseUrl}/reservation`, isAdmin, reservationRouter)
 app.use(`/${baseUrl}/coupon`, couponRouter)
 app.use(`/${baseUrl}/contact`, ContactRouter)
 app.use(`/${baseUrl}/wishlist`, WishlistRouter)
-app.use(`/${baseUrl}/feature`, featureRouter)
+app.use(`/${baseUrl}/feature`, featureRouter);
+app.use(`/${baseUrl}/service`, serviceRouter);
 app.use(`/${baseUrl}/term`, termsRouter);
 app.use(`/${baseUrl}/lookups`, lookupsRouter);
 

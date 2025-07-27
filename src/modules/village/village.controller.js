@@ -8,12 +8,12 @@ import { deleteChaletsByVillageId } from '../../utils/handlers/refactor.handler.
 import { normalizeFormData } from '../../utils/_helper/_helper.js';
 
 export const getAllVillages = async (req, res, next) => {
-  const villages = await villageModel.find().populate('city features.feature');
+  const villages = await villageModel.find().populate('city features.feature services.service');
   res.status(200).json({ success: true, data: villages });
 };
 
 export const getVillage = async (req, res, next) => {
-  const data = await villageModel.findOne({ _id: req.params.id }).populate('city features.feature');
+  const data = await villageModel.findOne({ _id: req.params.id }).populate('city features.feature services.service');
   res.status(200).json({ success: true, data });
 };
 
@@ -21,7 +21,7 @@ export const getVillage = async (req, res, next) => {
 export const addVillage = async (req, res, next) => {
   const { name, city } = req.body;
   // console.log(req.body);
-  const data = normalizeFormData(req.body, ["features"])
+  const data = normalizeFormData(req.body, ["features", 'services'])
 
   if (!name || !city) {
     return next(new AppError('Name and city ID are required.', 400));
@@ -71,7 +71,7 @@ export const deleteVillage = async (req, res, next) => {
 
 export const updateVillage = async (req, res, next) => {
   const { id } = req.params;
-  const { name, description, city, features } = req.body;
+  const { name, description, city, features, services } = req.body;
   const existing = await villageModel.findById(id);
   if (!existing) {
     return next(new AppError('Village not found.', 404));
@@ -91,6 +91,14 @@ export const updateVillage = async (req, res, next) => {
   if (features) {
     try {
       updateData.features = JSON.parse(features);
+    } catch {
+      return next(new AppError('Invalid features format. Expecting JSON array.', 400));
+    }
+  }
+
+  if (services) {
+    try {
+      updateData.services = JSON.parse(services);
     } catch {
       return next(new AppError('Invalid features format. Expecting JSON array.', 400));
     }

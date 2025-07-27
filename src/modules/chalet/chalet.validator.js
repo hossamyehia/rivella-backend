@@ -25,6 +25,10 @@ export const chaletCreateSchema = Joi.object({
     feature: Joi.string().required(),
     price: Joi.number().optional().default(0)
   })),
+  services: Joi.array().items(Joi.object({
+    service: Joi.string().required(),
+    price: Joi.number().optional().default(0)
+  })),
   terms: Joi.array().items(Joi.string()),
   admin: Joi.string().optional(),
   description: Joi.string().optional(),
@@ -33,7 +37,6 @@ export const chaletCreateSchema = Joi.object({
   isActive: Joi.bool().optional().default(true),
   isVisiable: Joi.bool().optional().default(true)
 });
-
 
 export const chaletUpdateSchema = Joi.object({
   code: Joi.string().optional(),
@@ -62,6 +65,12 @@ export const chaletUpdateSchema = Joi.object({
   features: Joi.array().items(
     Joi.object({
       feature: Joi.string().required(),
+      price: Joi.number().optional().default(0)
+    })
+  ).optional(),
+  services: Joi.array().items(
+    Joi.object({
+      service: Joi.string().required(),
       price: Joi.number().optional().default(0)
     })
   ).optional(),
