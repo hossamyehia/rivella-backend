@@ -37,16 +37,14 @@ export const createService = async (req, res, next) => {
 export const updateService = async (req, res, next) => {
   try {
     const { name, description } = req.body;
-    if (!name) return next(new AppError('الاسم مفقود', 400));
-    if (!description) return next(new AppError('الاسم مفقود', 400));
 
     const service = await serviceModel.findByIdAndUpdate(
       req.params.id,
-      { name },
+      { name, description },
       { new: true, runValidators: true }
     );
     if (!service) return next(new AppError('لا يوجد ميزه', 404));
-    
+
     res.status(200).json({ success: true, data: service });
   } catch (err) {
     next(err);
@@ -57,7 +55,7 @@ export const deleteService = async (req, res, next) => {
   try {
     const service = await serviceModel.findByIdAndDelete(req.params.id);
     if (!service) return next(new AppError('لا يوجد ميزه', 404));
-    
+
     res.status(200).json({ success: true, message: 'Service deleted successfully' });
   } catch (err) {
     next(err);

@@ -36,9 +36,9 @@ export const updateTerm = async (req, res) => {
     const updatedTerm = await termsModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!updatedTerm) {
       return res.status(404).json({ success: false, message: 'Term not found' });
-    }  
+    }
     res.status(200).json({ success: true, data: updatedTerm });
-    } catch (error) {
+  } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 }

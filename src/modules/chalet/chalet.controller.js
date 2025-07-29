@@ -33,12 +33,23 @@ export const createChalet = async (req, res, next) => {
         // .populate('city village features.feature terms');
         res.status(201).json({ success: true, data: chalet });
     } catch (err) {
+        if (req.files?.mainImg) {
+            removeImage('chalet', req.files?.mainImg[0].filename);
+        }
+        if (req.files?.imgs) {
+            for (const imgPath of req.files?.imgs) {
+                removeImage('chalet', imgPath.filename);
+            }
+        }
+        if (req.files?.video) {
+            removeImage('chalet', req.files?.video.filename);
+        }
         next(err);
     }
 };
 
 export const updateChalet = async (req, res, next) => {
-    console.log(req.body)
+    // console.log(req.body)
     const fieldsToParseAsJSON = ['rooms', 'features', 'terms', 'services'];
     const data = normalizeFormData(req.body, fieldsToParseAsJSON, ['code']);
     const { error } = chaletUpdateSchema.validate(data);

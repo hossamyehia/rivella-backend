@@ -37,8 +37,8 @@ featureRouter.post(
 featureRouter.put(
     '/:id',
     isAdmin,
-    valdation(featureIdSchema),
-    valdation(featureSchema),
+    // valdation(featureIdSchema),
+    // valdation(featureSchema),
     catchAsyncError(updateFeatureController)
 );
 // Delete a feature

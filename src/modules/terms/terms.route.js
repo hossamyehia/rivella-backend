@@ -38,8 +38,8 @@ termsRouter.post(
 termsRouter.put(
     '/:id',
     isAdmin,
-    valdation(termsIdSchema),
-    valdation(termsSchema),
+    // valdation(termsIdSchema),
+    // valdation(termsSchema),
     catchAsyncError(updateTerms)
 );
 

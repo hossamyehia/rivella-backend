@@ -44,7 +44,7 @@ const chaletSchema = mongoose.Schema({
   code: {
     type: String,
     require: true,
-    unique: true,
+    // unique: true,
   },
   rooms: [
     {

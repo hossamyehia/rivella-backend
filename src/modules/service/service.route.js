@@ -37,8 +37,8 @@ serviceRouter.post(
 serviceRouter.put(
     '/:id',
     isAdmin,
-    valdation(serviceIdSchema),
-    valdation(serviceSchema),
+    // valdation(serviceIdSchema),
+    // valdation(serviceSchema),
     catchAsyncError(updateServiceController)
 );
 // Delete a service
