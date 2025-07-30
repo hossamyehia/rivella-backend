@@ -67,13 +67,13 @@ export const updateChalet = async (req, res, next) => {
             return res.status(404).json({ error: 'Chalet not found' });
         }
 
-        if(req.files?.mainImg)
+        if (req.files?.mainImg)
             data.mainImg = req.files?.mainImg?.[0]?.filename;
-        
-        if(req.files?.imgs)
+
+        if (req.files?.imgs)
             data.imgs = req.files?.imgs?.map(f => f.filename);
 
-        if(req.files?.video)
+        if (req.files?.video)
             data.video = req.files?.video?.[0]?.filename;
 
         const updatedChalet = await chaletModel.findByIdAndUpdate(req.params.id, data, { new: true, session })
@@ -126,7 +126,24 @@ export const deleteChalet = async (req, res, next) => {
 export const getChaletById = async (req, res, next) => {
     try {
         const chalet = await chaletModel.findById(req.params.id)
-            .populate('city village features.feature services.service terms village.feartues.feature village.services.service');
+            .populate('city')
+            .populate('village')
+            .populate({
+                path: 'features',
+                populate: { path: 'feature' }
+            })
+            .populate({
+                path: 'services',
+                populate: { path: 'service' }
+            })
+            .populate('terms')
+            .populate({
+                path: 'village',
+                populate: [
+                    { path: 'features', populate: { path: 'feature' } },
+                    { path: 'services', populate: { path: 'service' } }
+                ]
+            });
         if (!chalet) return res.status(404).json({ error: 'Chalet not found' });
 
         const today = new Date();
