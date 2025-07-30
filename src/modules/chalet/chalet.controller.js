@@ -126,7 +126,7 @@ export const deleteChalet = async (req, res, next) => {
 export const getChaletById = async (req, res, next) => {
     try {
         const chalet = await chaletModel.findById(req.params.id)
-            .populate('city village features.feature services.service terms');
+            .populate('city village features.feature services.service terms village.feartues.feature village.services.service');
         if (!chalet) return res.status(404).json({ error: 'Chalet not found' });
 
         const today = new Date();
